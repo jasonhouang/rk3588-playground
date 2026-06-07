@@ -22,7 +22,7 @@ cd "$BSP_DIR"
 # 清理旧构建
 if [[ "$1" == "--clean" ]]; then
     echo "🧹 正在清理 Kernel 旧构建..."
-   ../radxa-bsp linux rk2410 --clean
+   ./bsp linux rk2410 --clean
 fi
 
 # 应用自定义 patch

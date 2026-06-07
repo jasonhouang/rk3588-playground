@@ -19,7 +19,7 @@ cd "$BSP_DIR"
 
 if [[ "$1" == "--clean" ]]; then
     echo "🧹 正在清理 U-Boot 旧构建..."
-   ../radxa-bsp u-boot rk2410 rock-5t --clean
+   ./bsp u-boot rk2410 rock-5t --clean
 fi
 
 # 执行编译 (使用 podman 容器)
