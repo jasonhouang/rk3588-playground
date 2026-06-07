@@ -11,3 +11,6 @@ bsp/.src/
 *.deb
 *.tar.xz
 wget-log*
+
+# RootFS 构建产物（权限问题）
+rock5t-dev/output/rootfs
