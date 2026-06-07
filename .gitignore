@@ -1,0 +1,13 @@
+# RootFS 构建产物
+rock5t-dev/output/rootfs/
+rock5t-dev/output/*.tar.gz
+rock5t-dev/output/*.log
+
+# BSP 构建产物
+bsp/output/
+bsp/.src/
+
+# 其他
+*.deb
+*.tar.xz
+wget-log*
