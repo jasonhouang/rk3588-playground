@@ -22,7 +22,7 @@ cd "$BSP_DIR"
 # 清理旧构建
 if [[ "$1" == "--clean" ]]; then
     echo "🧹 正在清理 Kernel 旧构建..."
-   ./bsp linux rk2410 --clean
+   ./bsp --no-submodule-check linux rk2410 --clean
 fi
 
 # 应用自定义 patch
@@ -42,7 +42,7 @@ fi
 
 # 执行编译
 echo "🔨 开始编译..."
-./bsp linux rk2410
+./bsp --no-submodule-check linux rk2410
 
 # 编译完成后恢复 BSP 源文件（保持仓库干净）
 echo "🔄 恢复 BSP 源文件..."

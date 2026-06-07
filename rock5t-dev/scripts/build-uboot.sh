@@ -19,11 +19,11 @@ cd "$BSP_DIR"
 
 if [[ "$1" == "--clean" ]]; then
     echo "🧹 正在清理 U-Boot 旧构建..."
-   ./bsp u-boot rk2410 rock-5t --clean
+   ./bsp --no-submodule-check u-boot rk2410 rock-5t --clean
 fi
 
 # 执行编译 (使用 podman 容器)
-./bsp u-boot rk2410 rock-5t
+./bsp --no-submodule-check u-boot rk2410 rock-5t
 
 echo "✅ U-Boot 编译完成!"
 echo "💾 你可以在 $BSP_DIR/.src/u-boot/ 目录下查看生成的文件。"
