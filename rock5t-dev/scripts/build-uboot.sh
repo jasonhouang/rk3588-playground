@@ -6,11 +6,11 @@ set -e
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 PROJECT_DIR=$(dirname "$SCRIPT_DIR")
-BSP_DIR="$PROJECT_DIR/../bsp"
+BSP_DIR="$PROJECT_DIR/../radxa-bsp"
 
 # 检查 BSP 目录是否存在
 if [ ! -d "$BSP_DIR" ]; then
-    echo "❌ 错误: 找不到 BSP 目录 ($BSP_DIR)。请确保已克隆 bsp 仓库。"
+    echo "❌ 错误: 找不到 BSP 目录 ($BSP_DIR)。请确保已克隆 radxa-bsp 仓库。"
     exit 1
 fi
 
@@ -19,7 +19,7 @@ cd "$BSP_DIR"
 
 if [[ "$1" == "--clean" ]]; then
     echo "🧹 正在清理 U-Boot 旧构建..."
-    ./bsp u-boot rk2410 rock-5t --clean
+   ../radxa-bsp u-boot rk2410 rock-5t --clean
 fi
 
 # 执行编译 (使用 podman 容器)

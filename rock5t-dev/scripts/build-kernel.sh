@@ -7,7 +7,7 @@ set -e
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 PROJECT_DIR=$(dirname "$SCRIPT_DIR")
-BSP_DIR="$PROJECT_DIR/../bsp"
+BSP_DIR="$PROJECT_DIR/../radxa-bsp"
 PATCH_DIR="$PROJECT_DIR/patches/kernel"
 
 # 检查 BSP 目录
@@ -22,7 +22,7 @@ cd "$BSP_DIR"
 # 清理旧构建
 if [[ "$1" == "--clean" ]]; then
     echo "🧹 正在清理 Kernel 旧构建..."
-    ./bsp linux rk2410 --clean
+   ../radxa-bsp linux rk2410 --clean
 fi
 
 # 应用自定义 patch

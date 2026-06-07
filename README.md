@@ -6,7 +6,7 @@
 
 ```
 rk3588-playground/
-├── bsp/                  [submodule] Radxa BSP 工具链 (radxa-repo/bsp)
+├── radxa-bsp/                  [submodule] Radxa BSP 工具链 (radxa-repo/bsp)
 ├── rk3588-reference/     [submodule] RK3588 技术文档 (Datasheet, TRM, PMIC)
 ├── rock5t-dev/           构建脚本、内核 Patch、开发文档
 │   ├── scripts/          U-Boot/Kernel/RootFS 编译脚本
@@ -20,7 +20,7 @@ rk3588-playground/
 
 | 路径 | 远程仓库 | 说明 |
 |------|----------|------|
-| `bsp` | https://github.com/radxa-repo/bsp.git | Radxa BSP 工具链，用于编译 U-Boot 和 Kernel |
+| `radxa-bsp` | https://github.com/radxa-repo/bsp.git | Radxa BSP 工具链，用于编译 U-Boot 和 Kernel |
 | `rk3588-reference` | https://github.com/jasonhouang/rk3588-reference.git | RK3588 技术参考文档（已迁移到 Git LFS） |
 
 ## 快速开始
@@ -55,7 +55,7 @@ cd rock5t-dev
 ./scripts/build-uboot.sh
 ```
 
-产物位于 `bsp/.src/u-boot/`。
+产物位于 `radxa-bsp/.src/u-boot/`。
 
 ### 4. 编译 Linux Kernel
 
@@ -66,7 +66,7 @@ cd rock5t-dev
 
 自动应用 `patches/kernel/` 下的自定义补丁，编译完成后恢复 BSP 源文件。
 
-生成的 deb 包位于 `bsp/` 目录。
+生成的 deb 包位于 `radxa-bsp/` 目录。
 
 ### 5. 构建 RootFS
 
@@ -83,8 +83,8 @@ BOARD_IP=192.168.8.170
 
 # 上传内核包
 sshpass -p 'radxa' scp \
-    bsp/linux-image-6.1.84-1-rk2410_*.deb \
-    bsp/linux-headers-6.1.84-1-rk2410_*.deb \
+    radxa-bsp/linux-image-6.1.84-1-rk2410_*.deb \
+    radxa-bsp/linux-headers-6.1.84-1-rk2410_*.deb \
     radxa@${BOARD_IP}:/tmp/
 
 # 安装并触发 DKMS（编译 WiFi 驱动）
@@ -99,14 +99,14 @@ EOF
 
 ```bash
 # 更新 submodule 到最新
-git submodule update --remote bsp
+git submodule update --remote radxa-bsp
 git submodule update --remote rk3588-reference
 
 # 进入 submodule 查看状态
-cd bsp && git status
+cd radxa-bsp && git status
 
 # 提交 submodule 更新
-cd .. && git add bsp rk3588-reference && git commit -m "Update submodules"
+cd .. && git add radxa-bsp rk3588-reference && git commit -m "Update submodules"
 ```
 
 ## 文档索引

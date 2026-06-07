@@ -1,6 +1,6 @@
 [submodule "rk3588-reference"]
 	path = rk3588-reference
 	url = https://github.com/jasonhouang/rk3588-reference.git
-[submodule "bsp"]
-	path = bsp
-	url = https://github.com/radxa-repo/bsp.git
+[submodule "radxa-bsp"]
+	path = radxa-bsp
+	url = https://github.com/jasonhouang/radxa-bsp.git

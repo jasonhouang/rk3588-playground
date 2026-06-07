@@ -82,7 +82,7 @@ cd /your/path/to/rk3588-playground/rock5t-dev
 
 脚本会自动：
 1. 应用 `patches/kernel/` 下的所有 patch
-2. 调用 `./bsp linux rk2410` 编译
+2. 调用 `./bsp linux rk2410` (radxa-bsp 仓库中的 bsp 工具) 编译
 3. 编译完成后恢复 BSP 源文件（保持仓库干净）
 
 生成文件：
@@ -97,8 +97,8 @@ BOARD_IP="192.168.8.170"
 
 # 上传 image + headers（必须同时安装）
 sshpass -p 'radxa' scp \
-    ~/Workspaces/rk3588-playground/bsp/linux-image-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
-    ~/Workspaces/rk3588-playground/bsp/linux-headers-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
+    ~/Workspaces/rk3588-playground/radxa-bsp/linux-image-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
+    ~/Workspaces/rk3588-playground/radxa-bsp/linux-headers-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
     radxa@${BOARD_IP}:/tmp/
 
 # 安装并触发 DKMS
@@ -175,7 +175,7 @@ dmesg | grep rtw89
 
 ```bash
 # 检查 patch 状态
-cd /your/path/to/rk3588-playground/bsp
+cd /your/path/to/rk3588-playground/radxa-bsp
 patch -p1 --dry-run < ../rock5t-dev/patches/kernel/0001-disable-bcmdhd.patch
 
 # 手动恢复
@@ -188,6 +188,6 @@ patch -R -p1 < ../rock5t-dev/patches/kernel/0001-disable-bcmdhd.patch
 
 1. **Rock 5T WiFi 是 Realtek PCIe 芯片**（RTL8852BE），不是 Broadcom SDIO
 2. **必须同时安装 image + headers**，否则 DKMS 无法编译驱动
-3. **使用 patch 管理自定义配置**，不要直接修改 BSP 源文件
+3. **使用 patch 管理自定义配置**，不要直接修改 radxa-bsp 源文件
 4. **编译后自动恢复 BSP**，保持仓库干净
 5. **DKMS 是标准做法**，外部驱动通过 DKMS 安装，不要编译进内核

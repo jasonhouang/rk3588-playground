@@ -14,11 +14,11 @@
     sudo apt-get install git make python3
     ```
 4.  **BSP 工具**: 本脚本依赖于上级目录的 `bsp` 仓库。
-    *   确保 `/your/path/to/rk3588-playground/bsp` 存在。
+    *   确保 `/your/path/to/rk3588-playground/radxa-bsp` 存在。
     *   如果不存在，请运行:
         ```bash
         cd /your/path/to/rk3588-playground
-        git clone https://github.com/radxa-repo/bsp.git
+        git clone https://github.com/jasonhouang/radxa-bsp.git
         ```
 
 ## 📦 编译指南
@@ -35,7 +35,7 @@ U-Boot 负责引导系统和加载内核。
 # 如果你修改了源码，想重新全量编译
 ./scripts/build-uboot.sh --clean
 ```
-*   **产物位置**: 编译成功后，生成的 `idbloader.img`, `u-boot.itb`, `u-boot-rockchip.bin` 等文件通常位于 `bsp/.src/u-boot/` 目录下。
+*   **产物位置**: 编译成功后，生成的 `idbloader.img`, `u-boot.itb`, `u-boot-rockchip.bin` 等文件通常位于 `radxa-bsp/.src/u-boot/` 目录下。
 
 ### 2. 编译 Linux Kernel
 Kernel 包含驱动程序和文件系统支持。
@@ -52,7 +52,7 @@ Kernel 包含驱动程序和文件系统支持。
     *   `output/uboot/`: 原始 U-Boot 镜像 (`idbloader.img`, `u-boot.itb`)。
     *   `output/debs/`: 可用于在板卡上安装的 Debian 包 (`linux-image-...deb`)。
     
-    *注：原始文件仍保留在 `../bsp/.src/` 目录下。
+    *注：原始文件仍保留在 `../radxa-bsp/.src/` 目录下。
 
 ### 3. 构建 Debian RootFS
 构建纯净的 Debian ARM64 根文件系统（默认 Debian 12 Bookworm）。
@@ -67,10 +67,10 @@ sudo ./scripts/build-rootfs.sh
 
 ## 💡 常见命令速查 (手动执行)
 
-如果你想直接操作 `bsp` 工具，可以参考以下命令：
+如果你想直接操作 `radxa-bsp` 中的 bsp 工具，可以参考以下命令：
 
 ```bash
-cd ../bsp
+cd ../radxa-bsp
 
 # 查看帮助
 ./bsp --help
