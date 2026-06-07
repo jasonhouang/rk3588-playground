@@ -14,10 +14,10 @@
     sudo apt-get install git make python3
     ```
 4.  **BSP 工具**: 本脚本依赖于上级目录的 `bsp` 仓库。
-    *   确保 `/your/path/to/rk3588-play/bsp` 存在。
+    *   确保 `/your/path/to/rk3588-playground/bsp` 存在。
     *   如果不存在，请运行:
         ```bash
-        cd /your/path/to/rk3588-play
+        cd /your/path/to/rk3588-playground
         git clone https://github.com/radxa-repo/bsp.git
         ```
 

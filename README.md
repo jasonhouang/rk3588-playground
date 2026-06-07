@@ -5,7 +5,7 @@
 ## 项目结构
 
 ```
-rk3588-play/
+rk3588-playground/
 ├── bsp/                  [submodule] Radxa BSP 工具链 (radxa-repo/bsp)
 ├── rk3588-reference/     [submodule] RK3588 技术文档 (Datasheet, TRM, PMIC)
 ├── rock5t-dev/           构建脚本、内核 Patch、开发文档
@@ -28,8 +28,8 @@ rk3588-play/
 ### 1. 克隆仓库（含 submodule）
 
 ```bash
-git clone --recurse-submodules <repo-url> rk3588-play
-cd rk3588-play
+git clone --recurse-submodules <repo-url> rk3588-playground
+cd rk3588-playground
 ```
 
 如果已经克隆但忘记初始化 submodule：

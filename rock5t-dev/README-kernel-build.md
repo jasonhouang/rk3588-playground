@@ -76,7 +76,7 @@ EOF
 ### 第 1 步：编译内核
 
 ```bash
-cd /your/path/to/rk3588-play/rock5t-dev
+cd /your/path/to/rk3588-playground/rock5t-dev
 ./scripts/build-kernel.sh --clean
 ```
 
@@ -97,8 +97,8 @@ BOARD_IP="192.168.8.170"
 
 # 上传 image + headers（必须同时安装）
 sshpass -p 'radxa' scp \
-    ~/Workspaces/rk3588-play/bsp/linux-image-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
-    ~/Workspaces/rk3588-play/bsp/linux-headers-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
+    ~/Workspaces/rk3588-playground/bsp/linux-image-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
+    ~/Workspaces/rk3588-playground/bsp/linux-headers-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
     radxa@${BOARD_IP}:/tmp/
 
 # 安装并触发 DKMS
@@ -175,7 +175,7 @@ dmesg | grep rtw89
 
 ```bash
 # 检查 patch 状态
-cd /your/path/to/rk3588-play/bsp
+cd /your/path/to/rk3588-playground/bsp
 patch -p1 --dry-run < ../rock5t-dev/patches/kernel/0001-disable-bcmdhd.patch
 
 # 手动恢复
