@@ -21,7 +21,7 @@ rk3588-play/
 | 路径 | 远程仓库 | 说明 |
 |------|----------|------|
 | `bsp` | https://github.com/radxa-repo/bsp.git | Radxa BSP 工具链，用于编译 U-Boot 和 Kernel |
-| `rk3588-reference` | git@github.com:jasonhouang/rk3588-reference.git | RK3588 技术参考文档（已迁移到 Git LFS） |
+| `rk3588-reference` | https://github.com/jasonhouang/rk3588-reference.git | RK3588 技术参考文档（已迁移到 Git LFS） |
 
 ## 快速开始
 
