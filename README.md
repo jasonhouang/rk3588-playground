@@ -78,14 +78,17 @@ sudo ./scripts/build-rootfs.sh
 ### 6. 安装到板子
 
 ```bash
+# 设置板子 IP（请根据实际网络环境修改）
+BOARD_IP=192.168.8.170
+
 # 上传内核包
 sshpass -p 'radxa' scp \
     bsp/linux-image-6.1.84-1-rk2410_*.deb \
     bsp/linux-headers-6.1.84-1-rk2410_*.deb \
-    radxa@192.168.8.170:/tmp/
+    radxa@${BOARD_IP}:/tmp/
 
 # 安装并触发 DKMS（编译 WiFi 驱动）
-sshpass -p 'radxa' ssh radxa@192.168.8.170 << 'EOF'
+sshpass -p 'radxa' ssh radxa@${BOARD_IP} << 'EOF'
 sudo dpkg -i /tmp/linux-image-6.1.84-1-rk2410_*.deb /tmp/linux-headers-6.1.84-1-rk2410_*.deb
 sudo dkms autoinstall -k 6.1.84-1-rk2410
 sudo reboot
@@ -120,7 +123,7 @@ cd .. && git add bsp rk3588-reference && git commit -m "Update submodules"
 | SoC | RK3588 (8 核: 4xA76 + 4xA55) |
 | RAM | 4/8 GB LPDDR5 |
 | WiFi | Realtek RTL8852BE (PCIe) |
-| 板子 IP | 192.168.8.170 |
+| 板子 IP | **根据实际情况调整**（示例文档中常用 `192.168.8.170`） |
 | 默认用户 | radxa / radxa |
 | SSH 端口 | 22 |
 

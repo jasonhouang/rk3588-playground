@@ -92,14 +92,17 @@ cd /your/path/to/rk3588-play/rock5t-dev
 ### 第 2 步：安装到板子
 
 ```bash
+# 设置板子 IP（请根据实际网络环境修改）
+BOARD_IP="192.168.8.170"
+
 # 上传 image + headers（必须同时安装）
 sshpass -p 'radxa' scp \
-    /your/path/to/rk3588-play/bsp/linux-image-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
-    /your/path/to/rk3588-play/bsp/linux-headers-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
-    radxa@192.168.8.170:/tmp/
+    ~/Workspaces/rk3588-play/bsp/linux-image-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
+    ~/Workspaces/rk3588-play/bsp/linux-headers-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
+    radxa@${BOARD_IP}:/tmp/
 
 # 安装并触发 DKMS
-sshpass -p 'radxa' ssh radxa@192.168.8.170 << 'EOF'
+sshpass -p 'radxa' ssh radxa@${BOARD_IP} << 'EOF'
 sudo dpkg -i /tmp/linux-image-6.1.84-1-rk2410_6.1.84-1_arm64.deb \
                /tmp/linux-headers-6.1.84-1-rk2410_6.1.84-1_arm64.deb
 
@@ -119,7 +122,7 @@ EOF
 重启后等待 30 秒：
 
 ```bash
-sshpass -p 'radxa' ssh radxa@192.168.8.170 << 'EOF'
+sshpass -p 'radxa' ssh radxa@${BOARD_IP} << 'EOF'
 echo "=== 内核 ==="
 uname -r
 
