@@ -14,3 +14,17 @@ wget-log*
 
 # RootFS 构建产物（权限问题）
 rock5t-dev/output/rootfs
+
+# 硬件设计文件（大文件）
+hardware-design/
+
+# BSP 构建产物
+bsp/*.deb
+bsp/*.tar.xz
+bsp/*.log
+bsp/output/
+bsp/.src/
+
+# 编译日志
+rock5t-dev/wget-log*
+rock5t-dev/output/
