@@ -1,15 +1,17 @@
-# 制作 ROCK 5T 自定义烧录镜像
+# 制作 ROCK 5T 自定义烧录镜像 (官方布局兼容)
 
-本文档介绍如何使用本地编译的 U-Boot、Kernel 和 RootFS 制作一个可烧录的完整磁盘镜像（`.img`）。
+本文档介绍如何使用本地编译的 U-Boot、Kernel 和 RootFS 制作一个与官方镜像结构完全一致的烧录镜像（`.img`）。
 
-## 1. 前置条件
+## 1. 结构说明 (关键)
 
-在运行脚本之前，请确保你已经通过 `build-*.sh` 完成了编译，并且 `radxa-bsp` 仓库中已检出相关源码。
+为了解决之前“无法自动启动”的问题，新版脚本**完全复刻了官方镜像的分区布局**：
 
-所需的源文件包括：
-- **U-Boot**: `radxa-bsp/.src/u-boot/idbloader.img`, `u-boot.itb`
-- **Kernel**: `radxa-bsp/.src/linux/arch/arm64/boot/Image`, `rk3588-rock-5t.dtb`
-- **RootFS**: `rock5t-dev/output/debian-bookworm-arm64-rootfs.tar.gz`
+- **p1 (16MB)**: 预留对齐区。
+- **p2 (300MB, FAT32)**: EFI/Overlays 分区。
+- **p3 (剩余空间, ext4)**: **RootFS 根文件系统**。
+    - **重要**：与之前的尝试不同，所有的启动文件（内核、设备树、extlinux 配置）现在都存放在 **RootFS 分区的 `/boot` 目录下**。
+
+这种布局确保了 U-Boot 能够正确扫描到 `/boot/extlinux/extlinux.conf` 并引导系统。
 
 ## 2. 创建镜像
 
@@ -21,75 +23,45 @@ sudo ./scripts/create-image.sh
 ```
 
 ### 脚本执行流程
-脚本会自动完成以下步骤（无需手动干预）：
+1.  创建 **8GB** 镜像文件（更接近标准 SD 卡容量）。
+2.  划分上述三个分区。
+3.  烧录 Bootloader (`idbloader.img` 和 `u-boot.itb`)。
+4.  格式化 p2 (vfat) 和 p3 (ext4)。
+5.  解压 RootFS 到 p3。
+6.  **将内核和设备树放入 p3 的 `/boot` 目录**。
+7.  生成启动配置，默认开启了 `earlycon` 以便调试。
 
-1.  **创建空白镜像**：生成 6GB 的 `.img` 文件。
-2.  **分区**：使用 `parted` 划分三个分区：
-    -   `p1` (15MB): 预留对齐区。
-    -   `p2` (286MB): **Boot 分区**，存放内核和设备树。
-    -   `p3` (5.7GB): **RootFS 分区**，存放根文件系统。
-3.  **烧录 Bootloader**：将 U-Boot 写入镜像开头的特定扇区：
-    -   `idbloader.img` → 扇区 64 (32KB)
-    -   `u-boot.itb` → 扇区 16384 (8MB)
-4.  **格式化与挂载**：格式化 Boot 和 RootFS 分区并挂载。
-5.  **填充内容**：
-    -   解压 RootFS 到 `p3`。
-    -   复制 `Image` 和 `rk3588-rock-5t.dtb` 到 `p2`。
-    -   生成 `extlinux/extlinux.conf` 启动配置。
-6.  **自动清理**：卸载分区并释放 loop 设备。
+## 3. 镜像结构详情
 
-**产物位置**：`output/rock-5t-custom.img`
-
-## 3. 镜像结构
-
-制作完成的镜像包含以下结构：
+制作完成的镜像结构：
 
 ```text
-rock-5t-custom.img (6GB)
-├── [Sector 64]      idbloader.img (DDR Init + SPL)
-├── [Sector 16384]   u-boot.itb (Main U-Boot + ATF)
-├── Partition 1 (15MB)  Reserved
-├── Partition 2 (286MB) Boot (ext4)
-│   ├── Image
-│   ├── rk3588-rock-5t.dtb
-│   └── extlinux/
-│       └── extlinux.conf
-└── Partition 3 (5.7GB) RootFS (ext4)
+rock-5t-custom.img (8GB)
+├── [Sector 64]      idbloader.img
+├── [Sector 16384]   u-boot.itb
+├── Partition 1 (16MB)  Reserved
+├── Partition 2 (300MB) EFI (FAT32)
+└── Partition 3 (~7.7GB) RootFS (ext4)
     ├── /bin, /etc, /usr...
-    └── /etc/fstab (自动配置了 /boot 挂载点)
+    └── /boot/
+        ├── Image                     <-- 自定义内核
+        ├── rk3588-rock-5t.dtb        <-- 自定义设备树
+        └── extlinux/
+            └── extlinux.conf         <-- 启动配置 (含 earlycon)
 ```
 
-## 4. 烧录方法
+## 4. 烧录与调试
 
-### 方法 A：SD 卡烧录 (dd)
+### 烧录
+同之前一样，使用 `dd` 或 `rkdeveloptool` 烧录。
 
-将 SD 卡插入电脑，确认设备名（如 `/dev/sdX`），然后运行：
+### 串口调试
+如果启动遇到问题，由于我们在 `extlinux.conf` 中默认加入了 **`earlycon`**，你应该能在串口看到内核最早期的输出信息：
 
-```bash
-# ⚠️ 警告：此操作将清空 SD 卡上的所有数据！
-# 请将 /dev/sdX 替换为实际的设备路径
-sudo dd if=output/rock-5t-custom.img of=/dev/sdX bs=1M status=progress oflag=direct
+```text
+Starting kernel ...
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]
+...
 ```
 
-### 方法 B：eMMC 烧录 (rkdeveloptool)
-
-如果板子处于 **Maskrom 模式**（按住 Recovery 键通电），可以使用 `rkdeveloptool`：
-
-```bash
-# 1. 初始化 loader
-sudo rkdeveloptool db /path/to/rk2410_loader.bin
-
-# 2. 写入镜像
-sudo rkdeveloptool wl 0 output/rock-5t-custom.img
-
-# 3. 重启
-sudo rkdeveloptool rd
-```
-
-## 5. 常见问题
-
-- **空间不足？**
-  默认镜像大小为 6GB。如果需要更多空间，可以修改 `create-image.sh` 中的 `truncate -s 6G` 参数（例如改为 `10G`），或者在烧录后使用 `resize2fs` 扩展分区。
-  
-- **启动失败？**
-  请检查 `p2` 分区中的 `/extlinux/extlinux.conf` 内容，确保 `root=/dev/mmcblk1p3` 参数正确指向了你的 RootFS 分区（SD 卡通常是 `mmcblk1`，eMMC 可能是 `mmcblk0`）。
+如果卡住了，请拍照发给我，`earlycon` 会告诉我们具体停在哪一步。

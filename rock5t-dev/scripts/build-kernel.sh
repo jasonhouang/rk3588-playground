@@ -42,26 +42,20 @@ fi
 
 # 执行编译
 echo "🔨 开始编译..."
-./bsp --no-submodule-check linux rk2410
+./bsp --no-submodule-check linux rk2410 --dirty -r 9
 
 # 编译完成后恢复 BSP 源文件（保持仓库干净）
 echo "🔄 恢复 BSP 源文件..."
-if [ -d "$PATCH_DIR" ] && ls "$PATCH_DIR"/*.patch &>/dev/null; then
-    for p in "$PATCH_DIR"/*.patch; do
-        # 反向应用 patch 来恢复原始文件
-        patch -R -p1 < "$p" 2>/dev/null || true
-    done
-    echo "   ✅ BSP 已恢复干净"
-fi
+# (no patches to revert)
 
 # 显示生成的文件
 echo ""
 echo "✅ Kernel 编译完成!"
 echo "💾 生成的 deb 包："
-ls -lh "$BSP_DIR"/linux-image-*.deb "$BSP_DIR"/linux-headers-*.deb "$BSP_DIR"/linux-libc-dev-*.deb 2>/dev/null || echo "   （未找到 deb 包，请检查编译日志）"
+ls -lh "$BSP_DIR"/linux-image-6.1.84-9-rk2410_*.deb 2>/dev/null || echo "   （未找到 deb 包，请检查编译日志）"
+
 echo ""
 echo "📋 安装到板子的命令："
-echo "   sshpass -p 'radxa' scp \\"
-echo "       $BSP_DIR/linux-image-6.1.84-1-rk2410_*.deb \\"
-echo "       $BSP_DIR/linux-headers-6.1.84-1-rk2410_*.deb \\"
-echo "       radxa@192.168.8.170:/tmp/"
+echo "   sshpass -p radxa scp \\"
+echo "       $BSP_DIR/linux-image-6.1.84-9-rk2410_6.1.84-9_arm64.deb \\"
+echo "       radxa@192.168.8.XXX:/tmp/"
